@@ -19,11 +19,20 @@ function clean(arr) {
   return r;
 }
 
-// function intersect(a, b) {
-//   return a.filter(function(n) {
-//     return b.indexOf(n) !== -1;
-//   });
-// }
+if (
+  argv.ingredient == undefined &&
+  argv.name == undefined &&
+  argv.id == undefined
+) {
+  console.log('usage: cli.js [--ingredient "i1, i2..."] [--all]')
+  console.log('              [--name "drink name"]');
+  console.log('              [--id drink-id]');
+  console.log('');
+  console.log('ingredient  search drink by ingredients names separated by comma');
+  console.log('   all      show drinks who fit only one of the ingredients');
+  console.log('name        search drink by name');
+  console.log('id          get drink recipe by id');
+}
 
 const all = {};
 
