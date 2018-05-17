@@ -41,8 +41,11 @@ if (argv.ingredient) {
   const recipies = ingredients.map(async ingredient => {
     // ingredient = ingredient.trim();
     const recipes = await get_recipes(ingredient);
-    console.log(ingredient + ':');
-    recipes.map( d => console.log("\t" + all[d].strDrink) );
+
+    if (argv.all !== undefined) {
+      console.log(ingredient + ':');
+      recipes.map( d => console.log("\t" + all[d].strDrink) );
+    }
     // console.log('');
     return recipes;
   })
@@ -50,8 +53,8 @@ if (argv.ingredient) {
   Promise.all(recipies).then((r) => {
     if (recipies.length <= 1) return false;
     const result = clean(r);
-    console.log(result);
-    console.log(ingredients + ':');
+
+    console.log(ingredients.join(', ') + ':');
     result.map( d => console.log("\t" + all[d].strDrink) );
 
     // console.log(clean(r));
