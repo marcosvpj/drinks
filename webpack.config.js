@@ -1,11 +1,10 @@
 const path = require("path");
 const webpack = require("webpack");
 const bundlePath = path.resolve(__dirname, "dist/");
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-  // entry: "./src/index.js",
   entry: ["babel-polyfill", "./src/index.js"],
-  devtool: 'eval-cheap-module-source-map',
   module: {
     rules: [
       {
@@ -26,10 +25,4 @@ module.exports = {
     filename: "bundle.js",
     crossOriginLoading: "anonymous"
   },
-  devServer: {
-    contentBase: path.join(__dirname, "public"),
-    port: 3000,
-    publicPath: "http://localhost:3000/dist"
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
 };
