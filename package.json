@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "babel --watch src -d dist",
+    "watch": "babel --watch src -d dist",
+    "build": "webpack",
     "precommit": "pretty-quick --staged",
     "pretty": "pretty-quick src/",
     "start": "webpack-dev-server --mode development"
