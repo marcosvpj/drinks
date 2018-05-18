@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
+import search from "./search.js";
 
 const ingredients = {
   drinks: [
@@ -172,7 +173,6 @@ const bar = ingredients.drinks.map(i => ({
 }));
 
 const RenderBottles = props => {
-  console.log(props);
   return props.bottles.map((i, k) => {
     return (
       <div
@@ -190,23 +190,27 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bar: bar
-      // shelf: bar.filter(i => !i.selected),
-      // mat: bar.filter(i => i.selected)
+      bar: bar,
+      selecteds: [],
+      drinks: []
     };
   }
 
   handleSelect(event, bottle) {
-    console.log(bottle);
-    console.log(event);
-    console.log(this);
+    const updatedBar = this.state.bar.map(b => {
+      if (b.name !== bottle.name) return b;
+      return Object.assign(b, { selected: !b.selected });
+    });
 
-    this.setState(prevState => ({
-      bar: prevState.bar.map(b => {
-        if (b.name !== bottle.name) return b;
-        return Object.assign(b, { selected: !b.selected });
-      })
-    }));
+    const selecteds = updatedBar.filter(i => i.selected).map(i => i.name);
+
+    search.byIngredients(selecteds).then( drinks => {
+      this.setState(prevState => ({
+        bar: updatedBar,
+        selecteds: selecteds,
+        drinks: drinks
+      }));
+    });
   }
 
   render() {
@@ -215,6 +219,10 @@ class App extends Component {
 
     return (
       <div className="App">
+        <h2>Drinks</h2>
+        <div className="ingredients">
+          {this.state.drinks.map( (d) => {return (<span key={d.idDrink}>{d.strDrink}<img src={d.strDrinkThumb} className="drink-thumb"/></span>)} )}
+        </div>
         <h2>Bar</h2>
         <div className="ingredients">
           <RenderBottles

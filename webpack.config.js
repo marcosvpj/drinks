@@ -3,7 +3,9 @@ const webpack = require("webpack");
 const bundlePath = path.resolve(__dirname, "dist/");
 
 module.exports = {
-  entry: "./src/index.js",
+  // entry: "./src/index.js",
+  entry: ["babel-polyfill", "./src/index.js"],
+  devtool: 'eval-cheap-module-source-map',
   module: {
     rules: [
       {
@@ -21,7 +23,8 @@ module.exports = {
   resolve: { extensions: ["*", ".js", ".jsx"] },
   output: {
     publicPath: bundlePath,
-    filename: "bundle.js"
+    filename: "bundle.js",
+    crossOriginLoading: "anonymous"
   },
   devServer: {
     contentBase: path.join(__dirname, "public"),

@@ -24,3 +24,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.drink-thumb{
+  width: 100px;
+}
