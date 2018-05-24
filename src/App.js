@@ -167,9 +167,45 @@ const ingredients = {
   ]
 };
 
-const bar = ingredients.drinks.map(i => ({
-  name: i.strIngredient1,
-  selected: false
+const smartIngredients = [
+  {
+    key: 'vodka',
+    group: ['Absolut Vodka', 'Vodka', 'Vanilla Vodka']
+  },{
+    key: 'wiskey',
+    group: ['bourbon', 'whiskey', 'Blended whiskey', 'Irish whiskey', 'Rye whiskey', 'jim beam', 'Johnnie Walkers', 'Jack Daniels', 'Wild Turkey']
+  },{
+    key: 'rum',
+    group: ['Rum', 'Light rum', 'dark rum', 'Añejo rum', 'White rum', '151 proof rum']
+  },{
+    key: 'gin',
+    group: ['gin']
+  },{
+    key: 'tequila',
+    group: ['tequila']
+  },{
+    key: 'sugar',
+    group: ['sugar', 'demerara Sugar', 'Sugar syrup']
+  },{
+    key: 'coffee',
+    group: ['Kahlua', 'Coffee liqueur', 'coffee', 'espresso']
+  },{
+    key: 'lemon',
+    group: ['lemon', 'lemon juice', 'Lemonade', 'Lemon peel']
+  },{
+    key: 'cachaca',
+    group: ['cachaca']
+  }
+];
+
+// const bar = ingredients.drinks.map(i => ({
+//   name: i.strIngredient1,
+//   selected: false
+// }));
+const bar = smartIngredients.map(i => ({
+  name: i.key,
+  selected: false,
+  group: i.group
 }));
 
 const RenderBottles = props => {
@@ -202,15 +238,35 @@ class App extends Component {
       return Object.assign(b, { selected: !b.selected });
     });
 
-    const selecteds = updatedBar.filter(i => i.selected).map(i => i.name);
+    const selecteds = updatedBar.filter(i => i.selected);//.map(i => i.name);
 
-    search.byIngredients(selecteds).then( drinks => {
+    console.log(updatedBar);
+    // Promise.all(search.groupSearch(selecteds))
+    search.groupSearch(selecteds)
+    .then( (i) => {
+      // const drinks = i[0] === undefined ? [] : i[0];
+
+      const drinks = i.reduce( (p, c, i,) => { return p.concat(c)}, []);
+      // const d = drinks.filter(function(item, pos, self) {
+      //   return self.indexOf(item) == pos;
+      // })
+
+      console.log('drinks', drinks);
+      // console.log('drinks undupe', d);
+
       this.setState(prevState => ({
         bar: updatedBar,
         selecteds: selecteds,
         drinks: drinks
       }));
-    });
+    })
+    // search.byIngredients(selecteds).then( drinks => {
+    //   this.setState(prevState => ({
+    //     bar: updatedBar,
+    //     selecteds: selecteds,
+    //     drinks: drinks
+    //   }));
+    // });
   }
 
   render() {

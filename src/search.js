@@ -2,16 +2,23 @@ function intersect(a, b) {
   return [...new Set(a)].filter(x => new Set(b).has(x));
 }
 
-function clean(arr) {
+function cleanDupes(a) {
+  return a.filter(function(item, pos, self) {
+    return self.indexOf(item) == pos;
+  })
+}
+
+function clean(arr, xor = true) {
   if (arr.length == 1) return arr[0];
   if (arr.length == 2) return intersect(arr[0], arr[1]);
   const n = [...arr];
   var r = n.pop();
   while (n.length) {
-    r = intersect(r, n.pop());
+    if (xor) r = intersect(r, n.pop());
+    if (!xor) r = r.concat(n.pop());
   }
 
-  return r;
+  return cleanDupes(r);
 }
 
 const all = [];
@@ -37,9 +44,19 @@ const ds = {
 };
 
 export default {
-  byIngredients: function(ingredients) {
-    // const ingredients = argv.ingredient.split(",").map(i => i.trim());
+  groupSearch (ingredient) {
+    const result = ingredient.map( i => this.byIngredients(i.group, false) );
+    console.log('groupSearch result', result);
 
+    return Promise.all(result).then( (r) => {
+      const all = r.map( z => cleanDupes(z))
+
+      return clean(all);
+    });
+    return result;
+  },
+  byIngredients: (ingredients, xor = true) => {
+    console.log('byIngredients', ingredients);
     const get_recipes = async ingredient => {
       const data = await ds.findByIngredient(ingredient);
       data.drinks.map(d => {
@@ -49,28 +66,17 @@ export default {
     };
 
     const recipies = ingredients.map(async ingredient => {
-      // ingredient = ingredient.trim();
       const recipes = await get_recipes(ingredient);
-
-      // if (argv.all !== undefined) {
-      //   console.log(ingredient + ":");
-      //   recipes.map(d => console.log("\t" + all[d].strDrink));
-      // }
-      // console.log('');
       return recipes;
     });
 
     return Promise.all(recipies).then(r => {
       if (recipies.length == 0) return false;
-      // if (recipies.length == 1) return r[0];
-      const result = clean(r);
+      const result = clean(r, xor);
 
       console.log(ingredients.join(", ") + ":");
       result.map(d => console.log("\t" + all[d].strDrink));
       return result.map(d => all[d]);
-      // return result.filter(d => console.log("\t" + all[d].strDrink));
-      return result;
-      // console.log(clean(r));
     });
   }
 }
