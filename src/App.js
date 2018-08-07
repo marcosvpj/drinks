@@ -180,7 +180,12 @@ const RenderBottles = props => {
         className="box-ingredient"
         onClick={e => props.onSelectBottle(e, i)}
       >
-        {i.name}
+        {/* {i.name} */}
+
+        <label>
+          <input type="checkbox"></input>
+          <span className="ingredient-name">{i.name}</span>
+        </label>
       </div>
     );
   });
@@ -230,13 +235,14 @@ class App extends Component {
             onSelectBottle={(e, i) => this.handleSelect(e, i)}
           />
         </div>
-        <h2>Shelf</h2>
+        <h2>O que você gosta?</h2>
         <div className="ingredients">
           <RenderBottles
             bottles={shelf}
             onSelectBottle={(e, i) => this.handleSelect(e, i)}
           />
         </div>
+        <button className="bottom-button">Mostrar Sugestões</button>
       </div>
     );
   }
