@@ -38,8 +38,6 @@ const ds = {
 
 export default {
   byIngredients: function(ingredients) {
-    // const ingredients = argv.ingredient.split(",").map(i => i.trim());
-
     const get_recipes = async ingredient => {
       const data = await ds.findByIngredient(ingredient);
       data.drinks.map(d => {
@@ -49,17 +47,11 @@ export default {
     };
 
     const recipies = ingredients.map(async ingredient => {
-      // ingredient = ingredient.trim();
       const recipes = await get_recipes(ingredient);
-
-      // if (argv.all !== undefined) {
-      //   console.log(ingredient + ":");
-      //   recipes.map(d => console.log("\t" + all[d].strDrink));
-      // }
-      // console.log('');
       return recipes;
     });
 
+    console.log({recipies});
     return Promise.all(recipies).then(r => {
       if (recipies.length == 0) return false;
       // if (recipies.length == 1) return r[0];
@@ -72,5 +64,8 @@ export default {
       return result;
       // console.log(clean(r));
     });
+  },
+  byId: function(id) {
+    return ds.findById(id);
   }
 }
