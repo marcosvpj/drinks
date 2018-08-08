@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./App.css";
+import "./App.scss";
 import search from "./search.js";
 
 const ingredients = {
@@ -180,12 +180,11 @@ const RenderBottles = props => {
         className="box-ingredient"
         onClick={e => props.onSelectBottle(e, i)}
       >
-        {/* {i.name} */}
-
+        <input type="checkbox"></input>
         <label>
-          <input type="checkbox"></input>
           <span className="ingredient-name">{i.name}</span>
         </label>
+        
       </div>
     );
   });
@@ -219,6 +218,35 @@ class App extends Component {
   }
 
   render() {
+    const shelf = this.state.bar.filter(i => !i.selected);
+    const mat = this.state.bar.filter(i => i.selected);
+
+    return (
+      <div className="App">
+        <h2>Drinks</h2>
+        <div className="ingredients">
+          {this.state.drinks.map( (d) => {return (<span key={d.idDrink}>{d.strDrink}<img src={d.strDrinkThumb} className="drink-thumb"/></span>)} )}
+        </div>
+        <h2>Bar</h2>
+        <div className="ingredients">
+          <RenderBottles
+            bottles={mat}
+            onSelectBottle={(e, i) => this.handleSelect(e, i)}
+          />
+        </div>
+        <h2>O que você gosta?</h2>
+        <div className="ingredients">
+          <RenderBottles
+            bottles={shelf}
+            onSelectBottle={(e, i) => this.handleSelect(e, i)}
+          />
+        </div>
+        <button className="bottom-button">Mostrar Sugestões</button>
+      </div>
+    );
+  }
+
+  renderResult() {
     const shelf = this.state.bar.filter(i => !i.selected);
     const mat = this.state.bar.filter(i => i.selected);
 
