@@ -64,5 +64,8 @@ export default {
       return result;
       // console.log(clean(r));
     });
+  },
+  byId: function(id) {
+    return ds.findById(id);
   }
 }

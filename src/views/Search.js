@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Link} from "react-router-dom";
 import "../App.css";
 import search from "../search.js";
 
@@ -10,13 +11,13 @@ const bar = ingredients.drinks.map(i => ({
   selected: false
 }));
 
-const searchByIngredients = function(ingredient) {
-  const endpoint = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredient}`
-  return fetch(endpoint)
-    .then(response => response.json())
-    .catch(response => console.log("Request error :(", response.message));
+function Drink(d) {
+  return (
+    <Link to={{pathname: `/${d.idDrink}`, state:{d}}} key={d.idDrink}>
+      {d.strDrink}<img src={d.strDrinkThumb} className="drink-thumb"/>
+    </Link>
+  );
 }
-
 class SearchScreen extends Component {
   constructor(props) {
     super(props);
@@ -51,13 +52,11 @@ class SearchScreen extends Component {
     const shelf = this.state.bar.filter(i => !i.selected);
     const mat = this.state.bar.filter(i => i.selected);
 
-    console.log({mat, shelf});
-
     return (
       <div className="App">
         <h2>Drinks</h2>
         <div className="ingredients">
-          {this.state.drinks.map( (d) => {return (<span key={d.idDrink}>{d.strDrink}<img src={d.strDrinkThumb} className="drink-thumb"/></span>)} )}
+          {this.state.drinks.map(Drink)}
         </div>
         <h2>Bar</h2>
         <div className="ingredients">
